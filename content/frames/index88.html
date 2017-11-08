@@ -1,0 +1,894 @@
+<!DOCTYPE HTML>
+<html lang="en">
+<head>
+
+<!---->
+
+    <link rel="stylesheet" href="../css/preloader.css" type="text/css" media="screen, print" />
+    <link rel="stylesheet" href="css/lavacake-cus.css" type="text/css" media="screen, print" />
+
+	<script type="text/javascript" src="../js/jquery-1.11.3.min.js"></script>
+	<script type="text/javascript" src="../js/jquery-ui-1.11.4.js"></script>
+	<script type="text/javascript" src="js/lavacake-cus-jq.js"></script>
+	<script type="text/javascript" src="../js/scormactions.js"></script>
+<!---->
+
+
+  <!-- script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script-->
+  <script type="text/javascript" src="../js/info.js"></script>
+  <script type="text/javascript" src="../js/jpreloader.min.js"></script>
+  <link rel="stylesheet" type="text/css" href="css/style.css" />
+  <link rel="stylesheet" type="text/css" href="css/jpreloader.css" />
+</head>
+<body>
+
+
+<div id="contentFull"></div>
+
+<div id="info">
+  <p>
+Multi-Purpose 360° Panoramic Script is a Three js, Jquery based panorama picture viewer. This script also have a pointer class which can describe pointed elements. Also it's supporting cross browser and fits for screen size of mobile, tablet, desktop. Multi-Purposely suited for viewing parks, peeks, mointains, lakes, cities, villages, sports, castles, churches, indoors any other miscellaneous.
+   </p>
+  <p>This demo will render with WebGL by default. If WebGL is not available for the browser, it will fallback to 2D Canvas rendering which is slower.<br/>Current renderer: <span id="renderer-info">NO CANVAS</span></p>
+  <p>2014 Java.Rennn</a></p>
+</div>
+<div class="crosshair"></div>
+<div class="nagivation-control">
+	<table width="100%" border="0" cellpadding="0" cellspacing="0">
+	  <tr>
+	    <td height="37px" width="184px" aligm="left" valign="top"></td>
+	    <td height="37px" align="center"> </td>
+	    <td height="37px" width="184px" align="right"></td>
+	  </tr>
+	  <tr>
+	    <td height="58px" width="128px" align="left" style="cursor:pointer"><img id="exitBtn" src="img/exitPan.png" /></td>
+	    <td height="58px" align="center"><img src="img/cortexLogo.png"/> </td>
+	    <td height="58px" width="374px"  valign="top" align="right" background="img/navBarNav.png">
+			<table width="100%" border="0" cellpadding="0" cellspacing="0">
+	  		  <tr>
+	    		<td width="60px" height="58px" onclick="onDocumentKeyboard(37);" style="cursor: pointer">&nbsp;</td>
+	    		<td width="60px" height="58px" onclick="onDocumentKeyboard(39);" style="cursor: pointer">&nbsp;</td>
+	    		<td width="60px" height="58px" onclick="onDocumentKeyboard(38);" style="cursor: pointer">&nbsp;</td>
+	    		<td width="60px" height="58px"  onclick="onDocumentKeyboard(40);" style="cursor: pointer">&nbsp;</td>
+	    		<td width="60px" height="58px"  onclick="toggleInfo()" style="cursor: pointer">&nbsp;</td>
+	    		<td width="60px" height="58px" onclick="toggleFullScreen()" style="cursor:pointer">&nbsp;</td>
+	  		  </tr>
+			</table>
+	    </td>
+	  </tr>
+	</table>
+</div>
+<div id="container"></div>
+<div id="popout">
+  <div class="popout-bg"></div>
+  <div class="popout-content">
+    <div class="member-info">
+      <span class="name-tag">&nbsp;</span><!-- br/-->
+      <!-- span class="role-tag">&nbsp;</span -->
+    </div>
+    <div class="thumb-container">
+	</div>
+  </div>
+</div>
+<script type="text/javascript" src="../js/Three.js"></script>
+<script type="text/javascript" src="../js/Detector.js"></script>
+<script type="text/javascript" src="../js/RequestAnimationFrame.js"></script>
+<script type="text/javascript" src="../js/Tween.js"></script>
+<!-- data -->
+<script type="text/javascript" src="../js/main.js"></script>
+
+<script type="text/javascript">
+
+function toggleFullScreen() {
+  if ((parent.document.fullScreenElement && parent.document.fullScreenElement !== null) ||    
+   (!parent.document.mozFullScreen && !parent.document.webkitIsFullScreen)) {
+    if (parent.document.documentElement.requestFullScreen) {  
+      parent.document.documentElement.requestFullScreen();  
+    } else if (parent.document.documentElement.mozRequestFullScreen) {  
+      parent.document.documentElement.mozRequestFullScreen();  
+    } else if (parent.document.documentElement.webkitRequestFullScreen) {  
+      parent.document.documentElement.webkitRequestFullScreen(Element.ALLOW_KEYBOARD_INPUT);  
+    }  
+  } else {  
+    if (parent.document.cancelFullScreen) {  
+      parent.document.cancelFullScreen();  
+    } else if (parent.document.mozCancelFullScreen) {  
+      parent.document.mozCancelFullScreen();  
+    } else if (parent.document.webkitCancelFullScreen) {  
+      parent.document.webkitCancelFullScreen();  
+    }  
+  }  
+}
+
+  var ticker = 0;
+  $('.crosshair').css('visibility', 'hidden');
+
+  
+
+function Ticker() {
+  this.handlers = [];
+  this.contextObjs = [];
+  this._lft = new Date().getTime();
+  this.frameRate = 15;
+  this.frameTime = 1000/this.frameRate;
+}
+
+Ticker.prototype = {
+  constructor: Ticker,
+  add: function (obj, handler) {
+    if(! handler instanceof Function) return;
+    if(this.contextObjs.indexOf(obj) == -1 || this.handlers.indexOf(handler) == -1) {
+      this.handlers.push(handler);
+      this.contextObjs.push(obj);
+    }
+  },
+  remove: function (handler) {
+    var pos = this.handlers.indexOf(handler);
+    if(pos >= 0) {
+      this.handlers.splice(pos,1);
+      this.contextObjs.splice(pos, 1);
+    }
+  },
+  tick: function() {
+    var now = new Date().getTime();
+    if((now - this._lft) > this.frameTime) {
+      this._lft = now;
+      for (var i = 0; i < this.handlers.length; ++i) {
+        this.handlers[i].call(this.contextObjs[i]);
+      }
+    }
+  }
+
+};
+Ticker.instance = new Ticker();
+
+//Implement Popout class wrap around a div
+function Popout() {
+  this._scrX = 0;
+  this._scrY = 0;
+  this._$ = $(this);
+}
+
+/**/
+
+/**/
+
+
+Popout.prototype = { 
+  constructor: Popout,
+  setPosition: function(x, y) {
+    this._scrX = x;
+    this._scrY = y;
+    this.style.left = x + 'px';
+    this.style.top = '40' + 'px';
+  },
+  getX: function() { return this._scrX; },
+  getY: function() { return this._scrY; },
+  setData: function(markerObj) {
+//    this._$.find('img')[0].src = markerObj.image;
+
+  this._$.find('.member-info')[0].innerHTML = '<img id="closePopout" class="pos-with-pointer" src="img/clear-spot.png" />';
+
+  if (markerObj.role != "scorm"){
+//	$('#closePopout').addClass('marker-scorm');
+//	window.location.replace("XindexScormPan.html");
+ // }else{
+    if (markerObj.role == "video"){
+		$('#closePopout').addClass('closePopoutVid');
+    }else{
+		$('#closePopout').addClass('closePopoutImg');
+    }
+  }
+  	  this._$.find('.thumb-container')[0].innerHTML = markerObj.image;
+//    this._$.find('#contentFull')[0].innerHTML = markerObj.image;
+
+
+ //   this._$.find('.name-tag')[0].innerHTML = markerObj.name;
+ //   this._$.find('.role-tag')[0].innerHTML = ' ' ; // markerObj.role;
+
+  },
+  show: function(time) {
+    if(this.style.display != 'block') this._$.stop().show(time);
+  },
+  hide: function(time) {
+      this._$.stop().hide(time);
+  }
+};
+
+Popout.extend = function (divEl) {
+  $.extend(divEl, Popout.prototype);
+  Popout.apply(divEl);
+  return divEl;
+};
+
+function BaseMarker() {
+  this._scrX = 100;
+  this._scrY = 100;
+  this._live = true;
+}
+
+BaseMarker.prototype = {
+  constructor: BaseMarker,
+  setPosition: function(x, y) {
+    this._scrX = x;
+    this._scrY = y;
+    this.style.left = x + 'px';
+    this.style.top = y + 'px';
+  },
+  getX: function() { return this._scrX; },
+  getY: function() { return this._scrY; },
+  visible: function(value) {
+    var isVisible = (this.style.display != 'none');
+    if(value === undefined) {
+      return isVisible;
+    } else {
+      if(value != isVisible) {
+        this.style.display = (value)?'block':'none';
+      }
+      return value;
+    }
+  },
+  activate: function() {
+    this._live = true;
+  },
+  deactivate: function() {
+    this._live = false;
+  }
+};
+
+function NavMarker(index, initObj) {
+  BaseMarker.call(this);
+  this.className = 'navigate-point';
+  this.id = 'navmarker'+index;
+  this.position = new THREE.Vector3(initObj.x, initObj.y, initObj.z);
+  this.target = initObj.target;
+
+  this.unitVector = new THREE.Vector3(initObj.x,  initObj.y, initObj.z).normalize();
+
+  this._bgX = 0;
+  Ticker.instance.add(this, this._animateBackground);
+}
+
+NavMarker.prototype = new BaseMarker();
+NavMarker.prototype.constructor = NavMarker;
+NavMarker.prototype._animateBackground = function (){
+  if(!this.visible()) return;
+  this.style.backgroundPosition = this._bgX +'px 0px';
+  this._bgX += 80;
+  if(this._bgX >= 1120) this._bgX = 0;
+};
+
+//factory function to create a PosMarker extends a Div element
+NavMarker.create = function(index, initObj) {
+  var element = document.createElement('div');
+  $.extend(element, NavMarker.prototype);
+  NavMarker.apply(element, arguments);
+  return element;
+};
+
+//Implement Marker class wrap around a div
+function PosMarker(index,x, y, z, personObj) {
+  BaseMarker.call(this);
+  this.className = 'marker';
+  this.id = 'marker'+index;
+  this.position = new THREE.Vector3(x, y, z);
+  this.data = personObj;
+  if(!personObj) alert('no personObj for marker ' + index);
+
+  if (personObj.role == 'scorm'){
+     this.innerHTML = '<div id="mZ'+index+'" class="marker-scorm"><div id="mY'+index+'" class="marker-symbol"><img id="tick" src="img/tick.png" width="25px"/> </div></div>';
+  }else{
+     this.innerHTML = '<span id="ml'+index+'" class="marker-label">' + personObj.name + '</span><br/><div id="ms'+index+'" Xclass="marker-symbol"><img id="mi"'+index+'" src="img/pulsingMarker.png" width="45px"/></div>';
+  }
+
+  $(document).ready(function(){
+  
+          
+    $("#exitBtn").click(function(){
+    
+      if (parent.document.cancelFullScreen) {  
+         parent.document.cancelFullScreen();  
+      } else if (parent.document.mozCancelFullScreen) {  
+         parent.document.mozCancelFullScreen();  
+      } else if (parent.document.webkitCancelFullScreen) {  
+         parent.document.webkitCancelFullScreen();  
+      } 
+      window.parent.ScormProcessSetValue("adl.nav.request", "exitAll");	
+	  window.parent.ScormProcessTerminate();
+	});
+			
+
+	pulsate("#ms"+index);
+    $( "#ms"+index ).mouseover(function() {   
+	  $("#ml"+index).css("visibility", "visible");
+	  $("#mi"+index).attr("scr", "img/pulsingMarker_hover.png");	  
+    });
+    $( "#ms"+index ).mouseout(function() {
+	  $("#ml"+index).css("visibility","hidden");
+	  $("#mi"+index).attr("scr", "img/pulsingMarker.png");	  
+    });
+  });
+
+  $(document).ready(function(){	
+	if (personObj.name == 'guitar'){
+	    $("#mZ"+index).css({height: 100, width: 50, Xposition:'absolute'});
+	}
+	if (personObj.name == 'coffe'){
+	    $("#mZ"+index).css({top: 0, height: 50, width: 50});
+	}
+	if (personObj.name == 'table'){
+	    $("#mZ"+index).css({height: 70, width: 250, left: 50});
+	}
+	
+	$( "#mZ"+index ).on('click',function() {  
+       showScormSymbol(index);
+    });
+  });
+
+  if (personObj.role != 'scorm'){
+    this.addEventListener('click', this.markerClickHandler);
+  }
+  this.unitVector = new THREE.Vector3(x, y, z).normalize();
+
+  this._bgX = 0;
+  Ticker.instance.add(this, this._animateBackground);
+  
+  this.flag = 0;
+  function pulsate(element) {
+    
+    if(this.flag == 0){
+	    this.flag = 1;
+    	$(element || this).animate({ opacity: 0 }, 1000, function() {
+        	$(this).animate({ opacity: 1 }, 1000, pulsate);
+    	});
+    }else{
+	    this.flag = 0;
+    	$(element || this).animate({ opacity: 0 }, 500, function() {
+	       	$(this).animate({ opacity: 10 }, 800, pulsate);
+    	});
+    }
+  }
+  
+}
+
+PosMarker.prototype = new BaseMarker();
+PosMarker.prototype.constructor = PosMarker;
+PosMarker.prototype._animateBackground = function (){
+  if(!this.visible()) return;
+  this.childNodes[2].style.backgroundPosition = this._bgX +'px 0px';
+  this._bgX += 40;
+  if(this._bgX > 280) this._bgX = 0;
+};
+PosMarker.prototype.markerClickHandler = function(e) {
+  popout.setData(this.data);
+  popout.setPosition(this._scrX, this._scrY);
+  popout.targetMarker = this;
+  popout.show(200);
+  
+  $('#container')[0].addEventListener('mouseup', this.clickOutsideHandler);
+  $('#closePopout')[0].addEventListener('mouseup', this.clickOutsideHandler);
+};
+PosMarker.prototype.clickOutsideHandler = function (e) {
+  popout.hide(200);
+  popout.targetMarker = null;
+  e.currentTarget.removeEventListener('mouseup', this.clickOutsideHandler);
+};
+//override visible function
+PosMarker.prototype.visible = function(value) {
+  if(value) {
+    //move register point at center of div
+    this.style.marginLeft =(- this.offsetWidth / 2) + 'px';
+  }
+  return BaseMarker.prototype.visible.call(this, value);
+
+};
+
+//factory function to create a PosMarker extends a Div element
+PosMarker.create = function(index, x, y, z, personObj) {
+  var element = document.createElement('div');
+  $.extend(element, PosMarker.prototype);
+  PosMarker.apply(element, arguments);
+  return element;
+};
+
+var cont = 0;
+function showScormSymbol(index){
+if ( $("#mY"+index).css("visibility") == "hidden" ){
+   $("#mY"+index).css("visibility", "visible");
+   cont ++;
+   if(cont == 3){
+     moveToNextSlide();
+   }
+}else{
+   $("#mY"+index).css("visibility", "hidden");
+   cont = cont - 1;
+}
+}
+
+
+function Panorama (panoramaObj, people) {
+
+  imageObj = new Image();
+  imageObj.src = "img/bg/" + window.parent.CurrentQuestion.bgImage;
+  
+  this.textureFile = imageObj.src;
+
+  this.group = new THREE.Object3D();
+
+  var this_obj = this;
+  var panoMap = THREE.ImageUtils.loadTexture( imageObj.src, undefined, function() {
+    if(typeof this_obj.textureLoadCompleteCallback == 'function') {
+      this_obj.textureLoadCompleteCallback.apply();
+    }
+    render(true);
+  });
+
+  var sphere;
+  if(isWebGL) {
+    sphere = new THREE.Mesh( new THREE.SphereGeometry( 500, 60, 40 ), new THREE.MeshBasicMaterial( { map: panoMap, wireframe: false } ) );
+  } else {
+    //reduce number of poligons to improve performance
+    sphere = new THREE.Mesh( new THREE.SphereGeometry( 500, 60,40 ), new THREE.MeshBasicMaterial( { map: panoMap, wireframe: false} ) );
+    sphere.overdraw = true; //seamless texture
+  }
+  sphere.doubleSided = true;
+  sphere.scale.x = -1;
+  this.sphere = sphere;
+  this.group.add(sphere);
+  var i;
+  this.markers = [];
+  this.markerLen = panoramaObj.markers.length;
+  for (i = 0; i < this.markerLen; ++i) {
+    var markerObj = panoramaObj.markers[i];
+    var marker = PosMarker.create(i, markerObj.x, markerObj.y, markerObj.z, people[markerObj.person]);
+
+    //document.body.appendChild(marker);
+    this.markers.push(marker);
+  }
+
+  this.navMarkers = [];
+  for ( i = 0; i < panoramaObj.navMarkers.length; ++i) {
+    var navMarker = NavMarker.create(i, panoramaObj.navMarkers[i]);
+    this.navMarkers.push(navMarker);
+     navMarker.addEventListener('click', this.switchPanoramaHandler);
+  }
+}
+
+// TODO: copy global variable to inside class
+Panorama.prototype = {
+  constructor: Panorama,
+  place: function() {
+    this.group.position.x = 0;
+    this.group.position.y = 0;
+    this.group.position.z = 0;
+    scene.add( this.group);
+  },
+  placeMarkers: function() {
+    var i;
+    for ( i = 0; i < this.markerLen; ++i) {
+      document.body.appendChild(this.markers[i]);
+      this.markers[i].activate();
+    }
+    for (i = 0; i < this.navMarkers.length; ++i) {
+      document.body.appendChild(this.navMarkers[i]);
+      this.navMarkers[i].activate();
+    }
+  },
+  remove: function() {
+    scene.remove(this.group);
+  },
+  removeMarkers: function() {
+    for (var i = 0; i < this.markerLen; ++i) {
+      document.body.removeChild(this.markers[i]);
+      this.markers[i].deactivate();
+    }
+    for (i = 0; i < this.navMarkers.length; ++i) {
+      document.body.removeChild(this.navMarkers[i]);
+      this.navMarkers[i].deactivate();
+    }
+  },
+  switchPanoramaHandler: function(event) {
+    var navMarker = event.currentTarget;
+    var movePos = new THREE.Vector3(- navMarker.position.x, - navMarker.position.y, - navMarker.position.z);
+    movePos.normalize();
+    movePos.multiplyScalar( 300 );
+
+    var targetPano = panoList[navMarker.target];
+    activePano.removeMarkers();
+    needRender = true;
+    if(isWebGL) new TWEEN.Tween(activePano.sphere.materials[0]).to({opacity: 0}, 500).start();
+    new TWEEN.Tween(activePano.group.position).to({
+      x: movePos.x, y: movePos.y, z: movePos.z}, 500).onComplete(function() {
+          activePano.remove();
+          targetPano.place();
+
+          activePano = targetPano; //closure scope problem with this.target
+          lat = 0;
+          lon = 0;
+          if(isWebGL) {
+            targetPano.sphere.materials[0].opacity = 0;
+            new TWEEN.Tween(targetPano.sphere.materials[0]).to({opacity: 1}, 500).onComplete(function() {
+              targetPano.placeMarkers();
+              needRender = false;
+            }).start();
+          } else {
+            targetPano.placeMarkers();
+          }
+
+      }).start();
+  },
+  update: function() {
+    var camUnitVector = camera.target.clone().normalize();
+    var i, angle, sameSide, p2D, marker;
+    for (i = 0; i < this.markerLen; ++i) {
+      marker =  this.markers[i];
+      p2D = projector.projectVector(marker.position.clone(), camera);
+
+      p2D.x = (p2D.x + 1)/2 * window.innerWidth;
+      p2D.y = - (p2D.y - 1)/2 * window.innerHeight;
+
+      //my trick
+      angle = Math.acos(camUnitVector.dot(marker.unitVector)) * 180 / 3.14;
+      sameSide = (angle < 90);
+
+      if(!sameSide || p2D.x < 0 || p2D.x > window.innerWidth ||
+         p2D.y < 0 || p2D.y > window.innerHeight) {
+        marker.visible(false);
+      } else {
+        marker.visible(true);
+        marker.setPosition(p2D.x, p2D.y);
+      }
+      if (popout.targetMarker === marker) {
+        marker.visible(false);
+        popout.setPosition(marker.getX(), marker.getY());
+      }
+    }
+
+    for (i = 0; i < this.navMarkers.length; ++i) {
+      marker =  this.navMarkers[i];
+      p2D = projector.projectVector(marker.position.clone(), camera);
+
+      p2D.x = (p2D.x + 1)/2 * window.innerWidth;
+      p2D.y = - (p2D.y - 1)/2 * window.innerHeight;
+
+      //my trick
+      angle = Math.acos(camUnitVector.dot(marker.unitVector)) * 180 / 3.14;
+      sameSide = (angle < 90);
+
+      if(!sameSide || p2D.x < 0 || p2D.x > window.innerWidth ||
+         p2D.y < 0 || p2D.y > window.innerHeight) {
+        marker.visible(false);
+      } else {
+        marker.visible(true);
+        marker.setPosition(p2D.x, p2D.y);
+      }
+    }
+  }
+};
+
+//-----------------------------------------  MAIN SCRIPT ----------------------------------
+
+var camera, scene, renderer, projector;
+
+var mouse = { x: 0, y: 0 }, intersected;
+
+var fov = 70,
+    texture_placeholder,
+    isUserInteracting = false,
+    onMouseDownMouseX = 0, onMouseDownMouseY = 0,
+    lon = 0, onMouseDownLon = 0,
+    lat = 0, onMouseDownLat = 0,
+    phi = 0, theta = 0,
+    onPointerDownPointerX,
+    onPointerDownPointerY,
+    onPointerDownLon,
+    onPointerDownLat,
+    isWebGL = false,
+    needRender = false;
+
+var container, popout, activePano, panoList;
+
+//testing
+var targetPos = {x:0, y:0, z:0};
+
+init();
+animate();
+
+function init() {
+  $('.crosshair').visible=false;
+  container = document.getElementById( 'container' );
+
+  camera = new THREE.PerspectiveCamera( fov, window.innerWidth / window.innerHeight, 1, 1100 );
+
+  camera.target = new THREE.Vector3( 0, 0, 0 );
+
+  scene = new THREE.Scene();
+
+  projector = new THREE.Projector();
+
+  var rendererInfo = document.getElementById('renderer-info');
+
+  if (Detector.webgl) {
+    renderer = new THREE.WebGLRenderer();
+    rendererInfo.innerHTML = "WebGL Renderer (Fast)";
+    isWebGL = true;
+  } else {
+    renderer = new THREE.CanvasRenderer();
+    rendererInfo.innerHTML = "2D Canvas Renderer (Slow)";
+  }
+  renderer.setSize( window.innerWidth, window.innerHeight );
+
+ container.appendChild( renderer.domElement );
+
+  panoList = [];
+
+  for (var i = 0; i <  officeData.panorama.length; ++i) {
+    panoList.push(new Panorama(officeData.panorama[i], officeData.people));
+  }
+
+  activePano = panoList[0];
+  activePano.textureLoadCompleteCallback = panoramaReadyHandler;
+  activePano.place();
+  activePano.placeMarkers();
+
+  popout = Popout.extend($('#popout').get(0));
+
+  renderer.sortObjects = false;
+  container.appendChild( renderer.domElement );
+
+  document.addEventListener( 'mousedown', onDocumentMouseDown, false );
+  document.addEventListener( 'mousemove', onDocumentMouseMove, false );
+  document.addEventListener( 'mouseup', onDocumentMouseUp, false );
+  document.addEventListener( 'keydown', onDocumentKeyboard, false );
+  window.addEventListener( 'resize', onWindowResize, false );
+  document.addEventListener( 'mousewheel', onDocumentMouseWheel, false );
+  document.addEventListener( 'DOMMouseScroll', onDocumentMouseWheel, false );
+  document.addEventListener( 'exitPan', onDocumentExit );
+}
+
+    function onDocumentExit(){
+
+
+    }
+
+
+
+function onWindowResize(){
+
+  camera.aspect = window.innerWidth / window.innerHeight;
+  camera.updateProjectionMatrix();
+
+  renderer.setSize( window.innerWidth, window.innerHeight );
+}
+
+function onDocumentMouseWheel(event){
+
+  needRender = true;
+
+  if ( event.wheelDeltaY ) {
+    camera.fov -= event.wheelDeltaY * 0.05;
+  } else if ( event.wheelDelta ) {
+    camera.fov -= event.wheelDelta * 0.05;
+  } else if ( event.detail ) {
+    camera.fov += event.detail * 1.0;
+  }
+
+  camera.fov = Math.max( 40, Math.min( 100, camera.fov ) );
+  camera.updateProjectionMatrix();
+}
+
+function panoramaReadyHandler() {
+  toggleInfo();
+}
+
+function onDocumentMouseDown( event ) {
+
+  event.preventDefault();
+
+  isUserInteracting = true;
+
+  onPointerDownPointerX = event.clientX;
+  onPointerDownPointerY = event.clientY;
+
+  onPointerDownLon = lon;
+  onPointerDownLat = lat;
+
+}
+
+
+function onDocumentMouseMove( event ) {
+
+  if ( isUserInteracting ) {
+
+    lon = ( onPointerDownPointerX - event.clientX ) * 0.1 + onPointerDownLon;
+    lat = ( event.clientY - onPointerDownPointerY ) * 0.1 + onPointerDownLat;
+    needRender = true;
+  }
+
+  mouse.x = ( event.clientX / window.innerWidth ) * 2 - 1;
+  mouse.y = - ( event.clientY / window.innerHeight ) * 2 + 1;
+}
+
+function onDocumentMouseUp( event ) {
+
+  isUserInteracting = false;
+
+  var vector = new THREE.Vector3( mouse.x, mouse.y, 0.5 );
+  projector.unprojectVector( vector, camera );
+
+  var ray = new THREE.Ray( camera.position, vector.subSelf( camera.position ).normalize() );
+
+  var intersects = ray.intersectScene( scene );
+  needRender = false;
+
+  if(ticker == 1){
+    console.log('X position: '+camera.target.x);
+    console.log('Y position: '+camera.target.y);
+    console.log('Z position: '+camera.target.z);
+    console.log('-----------------------------');
+  }
+}
+
+function onDocumentKeyboard(e){
+
+    if(e==40 || e==39 || e==38 || e==37){
+      var keyCode = e;
+    } else {
+      var keyCode = e.keyCode;
+    }
+    
+    console.log(keyCode);
+
+    var increment=1;
+
+    if (keyCode == 37) { 
+      lon = lon-increment;
+      needRender = true;
+    }
+
+    else  if (keyCode == 70) { 
+
+      if( ticker == 0){
+        $('.crosshair').css('visibility', 'visible');
+        ticker = 1;
+      } else {
+        $('.crosshair').css('visibility', 'hidden');
+        ticker = 0;
+      }
+
+    }
+
+    else  if (keyCode == 39) { 
+      lon = lon+increment;
+      needRender = true;
+    }
+    
+    else  if (keyCode == 38) { 
+      lat = lat+increment;
+      needRender = true;
+    }
+
+    else  if (keyCode == 40) { 
+      lat = lat-increment;
+      needRender = true;
+    }
+
+}
+
+function animate() {
+
+  requestAnimationFrame( animate );
+  render();
+  TWEEN.update();
+}
+
+function render(forceRender) {  
+
+
+  lat = Math.max( - 85, Math.min( 85, lat ) );
+  phi = ( 90 - lat ) * Math.PI / 180;
+  theta = lon * Math.PI / 180;
+
+  camera.target.x = 500 * Math.sin( phi ) * Math.cos( theta );
+  camera.target.y = 500 * Math.cos( phi );
+  camera.target.z = 500 * Math.sin( phi ) * Math.sin( theta );
+
+  var newPos = camera.target.clone().normalize().multiplyScalar(-20);
+  camera.position.set(newPos.x, newPos.y, newPos.z);
+
+  camera.lookAt( camera.target );
+
+
+  
+  if (needRender || forceRender) renderer.render( scene, camera );
+  if(activePano) {
+    activePano.update();
+  }
+  Ticker.instance.tick();
+}
+
+/* This is JPReloader ready function */
+    $(document).ready(function() {
+        $('body').jpreLoader();
+    });
+</script> 
+
+<!-- SCORM INI -->
+
+
+
+ 
+   
+
+    <script>
+
+
+
+        $(document).ready(function () {
+            $(window).load(function () { // makes sure the whole site is loaded
+				$("#status").fadeOut(); // will first fade out the loading animation
+				$("#preloader").delay(15350).fadeOut(15000); // will fade out the white DIV that covers the website.
+				$('body').addClass('loaded');
+				$('h5').css('color','#222222');
+				$("#loader-wrapper").fadeOut(); 
+			});
+
+/*            imageObj = new Image();
+            imageObj.src = "img/bg/" + window.parent.CurrentQuestion.bgImage;
+
+            $('#background').attr('src', imageObj.src);
+*/
+			$('.hide').hide();
+
+          resizeAndReposStage();
+
+
+
+            window.parent.$(window).resize(function () {
+
+                var TimedNext = function () {
+
+
+                    resizeAndReposStage();
+
+
+                };
+
+
+
+                setTimeout(TimedNext, 100);
+
+
+
+            });
+
+/*
+            // choice button
+            (function ButtonChoiceInit() {
+
+                // button click event
+				
+				imgButton('#next', function(){
+					window.parent.nextSlide();
+				});
+
+            }());
+
+*/
+            function resizeAndReposStage() {
+
+  //              $('#background').rePosStageElement(0, 0, 1920, 1080);
+
+//                $('#next').rePosStageElement(79, 948, 179, 70);
+
+            }
+
+
+        });
+
+
+    </script>
+
+<!-- SCORM FIN -->
+</body>
+</html>

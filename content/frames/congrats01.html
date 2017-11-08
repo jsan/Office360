@@ -1,0 +1,101 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <!--<meta http-equiv="X-UA-Compatible" content="IE=11">--> 
+    <meta charset="utf-8" />
+<link rel="stylesheet" href="../css/preloader.css" type="text/css" media="screen, print" />
+    <link rel="stylesheet" href="css/lavacake-cus.css" type="text/css" media="screen, print" />
+
+	<script type="text/javascript" src="../js/jquery-1.11.3.min.js"></script>
+	<script type="text/javascript" src="../js/jquery-ui-1.11.4.js"></script>
+	<script type="text/javascript" src="js/lavacake-cus-jq.js"></script>
+    <script type="text/javascript" src="../js/scormactions.js"></script>
+</head>
+<body>
+    <div id="loader-wrapper">
+        <div id="loader"></div>
+    
+        <div class="loader-section section-left"></div>
+        <div class="loader-section section-right"></div>
+    
+    </div>
+    <img id="background" class="pos-no-pointer" />
+
+    <img id="exit" class="pos-with-pointer" src="img/clear-spot.png"></a>
+
+
+    <script>
+
+
+
+        $(document).ready(function () {
+			
+            $(window).load(function () { // makes sure the whole site is loaded
+				$("#status").fadeOut(); // will first fade out the loading animation
+				$("#preloader").delay(350).fadeOut("slow"); // will fade out the white DIV that covers the website.
+				$('body').addClass('loaded');
+				$('h1').css('color','#222222');
+				$("#loader-wrapper").fadeOut(); 
+			});
+			
+			window.parent.ScormProcessSetValue("cmi.score.raw", 100);
+			window.parent.ScormProcessSetValue("cmi.score.min", 0);
+			window.parent.ScormProcessSetValue("cmi.score.max", 100);
+			
+			window.parent.ScormProcessSetValue("cmi.score.scaled", 1);		
+			window.parent.ScormProcessSetValue("cmi.success_status", "passed");
+			window.parent.ScormProcessSetValue("cmi.completion_status", "completed");
+					
+            imageObj = new Image();
+            imageObj.src = "img/bg/" + window.parent.CurrentQuestion.bgImage;
+
+            $('#background').attr('src', imageObj.src);
+
+			$('.hide').hide();
+
+            resizeAndReposStage();
+			
+			
+
+
+
+            window.parent.$(window).resize(function () {
+
+                var TimedNext = function () {
+
+
+                    resizeAndReposStage();
+
+
+                };
+
+
+
+                setTimeout(TimedNext, 100);
+
+
+
+            });
+
+
+            // choice button
+            // (function ButtonChoiceInit() {
+			
+				imgButton('#exit', function(){
+					//doStart('2'); 
+//                    window.location.replace("index88.html");
+                    window.parent.ScormProcessSetValue("adl.nav.request", "exitAll");	
+					window.parent.ScormProcessTerminate();
+			//	});
+            }());
+            function resizeAndReposStage() {
+                $('#background').rePosStageElement(0, 0, 1920, 1080);
+                $('#exit').rePosStageElement(550, 975, 180, 75);
+            }
+        });
+
+
+
+    </script>
+</body>
+</html>

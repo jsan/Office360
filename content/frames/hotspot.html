@@ -1,0 +1,98 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <!--<meta http-equiv="X-UA-Compatible" content="IE=11">--> 
+    <meta charset="utf-8" />
+<link rel="stylesheet" href="../css/preloader.css" type="text/css" media="screen, print" />
+    <link rel="stylesheet" href="css/lavacake-cus.css" type="text/css" media="screen, print" />
+
+	<script type="text/javascript" src="../js/jquery-1.11.3.min.js"></script>
+	<script type="text/javascript" src="../js/jquery-ui-1.11.4.js"></script>
+	<script type="text/javascript" src="js/lavacake-cus-jq.js"></script>
+	
+    <style>
+		#sortable { list-style-type: none; margin: 0; padding: 0; width: 60%; z-index:50; }
+		#sortable li { margin: 0 3px 3px 3px; padding: 18px; padding-left: 1.5em; font-size: 1.4em; height: 18px; cursor:pointer;}
+		#sortable li span { position: absolute; margin-left: -1.3em; cursor:pointer;}
+	</style>
+</head>
+<body>
+	<div id="loader-wrapper">
+        <div id="loader"></div>
+    
+        <div class="loader-section section-left"></div>
+        <div class="loader-section section-right"></div>
+    
+    </div>
+
+
+    <img id="background" class="pos-no-pointer" />
+    
+	<!--Including all the images for the project.-->
+    <img id="spot-1" class="pos-no-pointer" src="img/clear-spot.png" />
+    <img id="spot-2" class="pos-no-pointer" src="img/clear-spot.png" />
+    
+    <img id="white-back" class="pos-no-pointer hide" src="img/white-back.png" />
+    
+    <img id="correct" class="pos-no-pointer hide" src="img/correct.png" />
+    <img id="incorrect" class="pos-no-pointer hide" src="img/incorrect.png" />
+
+    
+<script>
+
+$(document).ready(function ( ) {
+	$(window).load(function () { // makes sure the whole site is loaded
+			$("#status").fadeOut(); // will first fade out the loading animation
+			$("#preloader").delay(350).fadeOut("slow"); // will fade out the white DIV that covers the website.
+			$('body').addClass('loaded');
+			$('h1').css('color','#222222');
+			$("#loader-wrapper").fadeOut(); 
+	});
+
+	imageObj = new Image();
+	imageObj.src = "img/bg/" + window.parent.CurrentQuestion.bgImage;
+	
+	$('#background').attr('src', imageObj.src);
+	
+	$('.hide').hide();
+
+	resizeAndReposStage();
+
+	window.parent.$(window).resize(function () {
+
+		var TimedNext = function () {
+			resizeAndReposStage();
+		};
+		setTimeout(TimedNext, 100);
+	});
+
+	function resizeAndReposStage() {
+
+		$('#background').rePosStageElement(0, 0, 1920, 1080);
+		$('#white-back').rePosStageElement(0, 0, 1920, 1080);
+
+		$('#correct').rePosStageElement(560, 224, 800, 592);
+		$('#incorrect').rePosStageElement(562, 168, 800, 730);
+		
+		$('#spot-1').rePosStageElement(18, 146, 686, 332);
+		$('#spot-2').rePosStageElement(1204, 146, 686, 320);
+
+	}
+	
+	(function ButtonChoiceInit() {
+		
+		imgButton('#spot-1', function(){
+			ShowIncorrect();
+		});
+		
+		imgButton('#spot-2', function(){
+			ShowCorrect();
+		});
+
+	}());
+});
+</script>
+
+</body>
+
+</html>

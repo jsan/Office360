@@ -1,0 +1,42 @@
+﻿html{
+  height: 100%;
+}
+body {
+  min-height: 100%;
+  position: relative;
+}
+
+.pos-no-pointer{
+	position: absolute;
+	float: left;
+	top: 0;
+	left: 0;
+}
+
+.pos-with-pointer{
+	cursor: pointer;
+	position: absolute;
+	float: left;
+	top: 0;
+	left: 0;
+}
+
+
+
+/*******************Buttons*************************/
+
+.btn-next-slide{
+	background: url(../img/next.png) no-repeat;
+	background-size: contain;
+}
+			
+.btn-next-slide:hover {
+
+	background-image: url(../img/next-mouseover.png);
+
+}
+
+.btn-bg-img {
+    background-repeat: no-repeat;
+    background-size: contain;
+}

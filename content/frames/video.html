@@ -1,0 +1,646 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+<!--<meta http-equiv="X-UA-Compatible" content="IE=11">--> 
+    <meta charset="utf-8" />
+<link rel="stylesheet" href="../css/preloader.css" type="text/css" media="screen, print" />
+<link rel="stylesheet" href="css/lavacake-cus.css" type="text/css" media="screen, print" />
+
+<script type="text/javascript" src="js/jwplayer/jwplayer.js"></script>
+<script type="text/javascript">jwplayer.key="f+WX3Jvl8QNJ+aJtK0HVlhF3gRiiqEdGTbMNF4YDLI8=";</script>
+<script type="text/javascript" src="../js/jquery-1.11.3.min.js"></script>
+<script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
+
+<script type="text/javascript" src="js/lavacake-cus-jq.js"></script>
+
+<style>
+
+.video-screen-text{
+	font-family:Gotham, 'Helvetica Neue', Helvetica, Arial, sans-serif; 
+	color:#FFFFFF; 
+	font-size:16px;
+}
+
+#video-menu{
+	display:none;
+}
+
+.hide{
+	display:none;
+}
+
+
+
+</style>
+
+</head>
+
+<body >
+
+
+<div id="loader-wrapper">
+    <div id="loader"></div>
+
+    <div class="loader-section section-left"></div>
+    <div class="loader-section section-right"></div>
+
+</div>
+
+<div id="content_video" ></div>
+
+<img id="clear-out" alt="Video Background" class="pos-with-pointer" src="img/clear-spot.png" />
+
+<div id="video-menu">
+
+	<!-- images -->
+
+    <img id="bottom-bg" alt="Video Background" class="pos-no-pointer" src="img/video-skin/background_buttom.png" />
+     <!--   
+    <img id="background-top" alt="Video Background" class="pos-no-pointer" src="img/video-skin/background-top.png" />
+    
+    <img id="progress-marker-1" alt="Video Background" class="pos-no-pointer" src="img/video-skin/progress-marker.png" />
+    
+    <img id="progress-marker-2" alt="Video Background" class="pos-no-pointer" src="img/video-skin/progress-marker.png" />
+    
+    <img id="progress-marker-3" alt="Video Background" class="pos-no-pointer" src="img/video-skin/progress-marker.png" />
+    
+    <img id="course-progress-bar" alt="Video Background" class="pos-no-pointer" src="img/video-skin/course-progress-bar.png" />
+    
+    <img id="course-progress-bar-highlight" alt="Video Background" class="pos-no-pointer" src="img/video-skin/course-progress-bar-highlight.png" />
+    -->
+    <img id="progress-bar" alt="Video Background" class="pos-no-pointer" src="img/video-skin/progress-bar.png" />
+    
+    <img id="progress-circle" alt="Video Background" class="pos-no-pointer" src="img/video-skin/progress-circle.png" />
+    
+    <img id="company-logo" alt="Video Background" class="pos-no-pointer" src="img/video-skin/company-logo.png" />
+    
+    <!-- buttons -->
+    
+    <!--<a id="menu-butt" href="#" class="pos-no-pointer"></a>-->
+    
+    <img id="close-butt" alt="Close Button" class="pos-with-pointer" src="img/video-skin/close-button.png" />
+    
+    <img id="pause-butt" alt="Pause Button" class="pos-with-pointer" src="img/video-skin/pause-butt.png" />
+    
+    <img id="play-butt" alt="Play Button" class="pos-with-pointer hide" src="img/video-skin/play-butt.png" />
+    
+    <img id="back-butt" alt="Back Button" class="pos-with-pointer" src="img/video-skin/back-butt.png" />
+    
+    <img id="next-butt" alt="Next Button" class="pos-with-pointer" src="img/video-skin/next-butt.png" />
+    
+    <img id="info-butt" alt="Info Button" class="pos-with-pointer" src="img/video-skin/info-butt.png" />
+
+    
+    <img id="vol-butt" alt="Video Background" class="pos-with-pointer" src="img/video-skin/vol-butt.png" />
+    
+   
+    <div id="vol-butt-div" class="hide">
+    
+    	<img id="vol-bar" alt="Video Background" class="pos-with-pointer" src="img/video-skin/vol-bar.png" />
+        <img id="vol-slide" alt="Video Background" class="pos-with-pointer" src="img/video-skin/vol-slide.png" />
+    	
+    </div>
+    
+    <!-- text fields    
+
+    <p id="course-per-text" class="pos-no-pointer video-screen-text" ></p>
+    
+    <p id="breadcrumbs" class="pos-no-pointer video-screen-text" >BHP | Iron Ore</p>
+    -->
+
+	<!-- text fields -->    
+
+    
+    
+    <p id="time-sig" class="pos-no-pointer video-screen-text" ></p>
+
+</div>
+
+<img id="menu-out" alt="Video Background" class="pos-no-pointer hide" src="img/clear-spot.png" />
+
+<div id="info-div" class="hide">
+    	<img id="info-bg" alt="Video Background" class="pos-with-pointer" src="img/info-spot.png" />
+        <img id="click-to-close" alt="Video Background" class="pos-with-pointer" src="img/video-skin/click-to-close.png" />
+        <img id="info-bottom-right" alt="Video Background" class="pos-with-pointer" src="img/video-skin/info-bottom-right.png" />
+        <img id="info-bottom-left" alt="Video Background" class="pos-with-pointer" src="img/video-skin/info-bottom-left.png" />
+        <img id="info-top-left" alt="Video Background" class="pos-with-pointer" src="img/video-skin/info-top-left.png" />
+</div>
+
+  <img class="hide" src="img/video-skin/full-screen-butt_hover.png" />
+  <img class="hide" src="img/video-skin/info-butt_hover.png"  />
+  <img class="hide" src="img/video-skin/vol-butt_hover.png"  />
+  <img class="hide" src="img/video-skin/next-butt_hover.png"  />
+  <img class="hide" src="img/video-skin/back-butt_hover.png"  />
+  <img class="hide" src="img/video-skin/play-butt_hover.png"  />
+  <img class="hide" src="img/video-skin/pause-butt_hover.png"  />
+  <img class="hide" src="img/video-skin/close-button_hover.png"  />
+
+
+  
+
+
+<script>
+
+
+$( document ).ready(function() {
+	
+
+	
+	var windowLoaded = false;
+	
+	$(window).load(function () { // makes sure the whole site is loaded
+		windowLoaded = true;
+
+	});
+	
+	var widthPerVolBar = 0;
+	var widthPerSlide = 0;
+	
+	var proDragXBoundLeft = 0;
+	var proDragXBoundRight = 0;
+	
+	var volDragXBoundLeft = 0;
+	var volDragXBoundRight = 0;
+			      
+	var minStr = '';
+	var secStr = '';
+	
+	var coursePro = window.parent.Current + 1;
+	var courseDur = window.parent.courseDur;
+	
+	var menuShow = false;
+	var overMenu = false;
+	
+	var courseProPer = coursePro/courseDur;
+	
+	var volSlidePos = 0;
+	var volBarWidth = 0;
+	
+	
+	var courseProPerRound = Math.round((courseProPer * 100));
+	$('#course-per-text').text(courseProPerRound.toString() + '%');
+					  
+	resizeAndReposStage();
+	
+	
+				  
+	jwplayer("content_video").setup({
+		playlist: [{
+			//image: "../images/video_player_tmp.png",
+			/*
+			tracks: [{ 
+				file: '../vids/' + window.parent.CurrentQuestion.Video +".xml", 
+				label: "English",
+				kind: "captions",
+				"default": false 
+			}],*/
+			sources: [
+					{ file: '../vids/' + window.parent.CurrentQuestion.Video +".mp4" }
+			]				
+		}],
+		skin: "js/jwplayer/skins/cbp.xml",
+		controls: false,
+		height: $(window).height(),
+		width: $(window).width(),
+		aspectratio: "16:9",
+		captions: {
+			back: true
+			/*color: '#FF0000',
+			fontsize: 24*/
+		}
+	});
+	jwplayer('content_video').setControls(false);
+	
+	var videoInt = setInterval(function() {
+		
+		if(jwplayer("content_video").getBuffer() >= 20 && windowLoaded){
+			$("#status").fadeOut(); // will first fade out the loading animation
+			$("#preloader").delay(350).fadeOut("slow"); // will fade out the white DIV that covers the website.
+			$('body').addClass('loaded');
+			$('h1').css('color','#222222');
+			jwplayer('content_video').seek(0);
+			jwplayer('content_video').setMute(false);
+			myStopFunction();
+		}
+		
+	}, 100);
+
+	//setInterval(videoInt, 100);
+	
+	function myStopFunction() {
+		clearInterval(videoInt);
+	}
+	//setTimeout
+
+	
+	jwplayer("content_video").setCurrentCaptions(0);	
+	
+	jwplayer('content_video').onComplete(function() {
+		window.parent.nextSlide();
+	});
+	
+	jwplayer('content_video').onPlay(function() {
+		
+		widthPerSlide = ((jwplayer("content_video").getVolume() / 100) * 127) + 299;
+		$('#vol-slide').rePosStageElement(widthPerSlide, 1020, 18, 18); 
+		
+		//$('#vol-bar').width(widthPer).height(5);
+		widthPerVolBar = (jwplayer("content_video").getVolume() / 100) * 127;
+		$('#vol-bar').rePosStageElement(316, 1027, widthPerVolBar, 5); 
+	});
+	
+	
+	var posInt = setInterval(function(){ posIntFunc(); }, 100); 
+	
+	function posIntFunc() { 
+
+		var time = jwplayer("content_video").getPosition();
+		var duration = jwplayer("content_video").getDuration();
+		var perDone = time/duration;
+		
+		var proWidth = perDone * 1920;
+		
+		var minutes = Math.floor(time / 60);
+		var seconds = Math.round(time - minutes * 60);
+		
+		if (isNaN(minutes)){minutes = 0;}
+		if (isNaN(seconds)){seconds = 0;}
+		
+		if (seconds == 60){seconds = 59;}
+		
+		if (minutes.toString().length == 1){
+			minStr = '0' + minutes.toString();
+		}
+		else{
+			minStr = minutes.toString();
+		}
+		
+		if (seconds.toString().length == 1){
+			secStr = '0' + seconds.toString();
+		}
+		else{
+			secStr = seconds.toString();
+		}
+
+		$('#time-sig').text(minStr + ':' + secStr);
+		
+		
+		$('#progress-bar').rePosStageElement(0, 967, proWidth - 20, 7);
+		
+		$('#progress-circle').rePosStageElement(proWidth -  28, 956, 30, 30);
+		
+	}
+	
+	window.parent.$(window).resize(function(){
+	
+	
+		var TimedNext = function() {
+			
+			jwplayer("content_video").resize($(window).width(), $(window).height());
+			resizeAndReposStage();
+			
+		}
+		setTimeout(TimedNext, 100);
+	});
+	
+	jwplayer('content_video').play();
+	jwplayer('content_video').setMute(true);
+	
+	
+	function resizeAndReposStage() {
+
+		$('#background-blur').rePosStageElement(0, 0, 1920, 1080);
+		
+		$('#noise-loader').rePosStageElement(851, 431, 218, 218);
+		
+		$('#clear-out').rePosStageElement(0, 0, 1920, 1080);
+		
+		$('#popup').rePosStageElement(0, 0, 1920, 1080);	
+		
+		$('#bottom-bg').rePosStageElement(0, 966, 1920, 114);
+		
+		$('#menu-out').rePosStageElement(0, 115, 1920, 850); 
+		
+		$('#background-top').rePosStageElement(0, 0, 1920, 382); 
+		
+		$('#close-butt').rePosStageElement(1814, 975, 106, 105); 
+		
+		$('#pause-butt').rePosStageElement(914, 975, 160, 105); 
+		
+		$('#play-butt').rePosStageElement(914, 975, 160, 105); 
+		
+		$('#back-butt').rePosStageElement(801, 975, 113, 105); 
+		
+		$('#next-butt').rePosStageElement(1074, 975, 113, 105); 
+		
+		$('#full-screen-butt').rePosStageElement(1714, 975, 70, 105); 
+		
+		$('#info-butt').rePosStageElement(130, 975, 78, 105); 
+		
+		$('#vol-butt').rePosStageElement(239, 975, 238, 105); 
+		
+		$('#time-sig').css({ 'left': $(window).width() * wPer(40), 'top': $(window).height() * hPer(990) });
+		
+		$('#breadcrumbs').css({ 'left': $(window).width() * wPer(215), 'top': $(window).height() * hPer(0.5) });
+		
+		
+		$('#ok').rePosStageElement(866, 818, 189, 106);
+		
+		
+		////////vol///////
+				
+		$('#vol-slide').rePosStageElement(volSlidePos, 1020, 18, 18); 
+		
+	    $('#vol-bar').rePosStageElement(316, 1027, volBarWidth, 5); 
+		
+		$('#progress-bar').rePosStageElement(0, 967, 0, 7);
+		
+		$('#progress-circle').rePosStageElement(0, 956, 30, 30);
+		
+		$('#company-logo').rePosStageElement(1711, 0, 209, 84);
+		
+		$('#course-progress-bar').rePosStageElement(215, 71, 1445, 2);//.css({ 'left': 215, 'top': 71 }).width($(window).width() - 475).height(2);
+		
+		$('#course-progress-bar-highlight').rePosStageElement(215, 71, (1445 * courseProPer), 2);//.css({ 'left': 215, 'top': 71 }).width(($(window).width() - 475) * courseProPer).height(2);
+		
+		$('#progress-marker-1').rePosStageElement(215, 64, 4, 15);//.css({ 'left': 215, 'top': 64 });
+		
+		$('#progress-marker-2').rePosStageElement(1660, 64, 4, 15);//.css({ 'left': $(window).width() - 260, 'top': 64 });
+		
+		$('#progress-marker-3').rePosStageElement((1445 * courseProPer) + 215, 64, 4, 15);//.css({ 'left': (($(window).width() - 475) * courseProPer) + 215, 'top': 64 });
+		
+		$('#course-per-text').css({ 'left': $(window).width() * wPer((1445 * courseProPer) + 205) , 'top': $(window).height() * hPer(81) });
+		
+		////////info screen /////////////
+		
+		$('#info-bg').rePosStageElement(0, 0, 1920, 1080);
+		
+		$('#click-to-close').rePosStageElement(682, 515, 558, 108); 
+		
+		$('#info-bottom-right').rePosStageElement(1416, 670, 504, 410); //.css({ 'left': $(window).width() - 504, 'top': $(window).height() - 410 });
+		
+		$('#info-bottom-left').rePosStageElement(0, 830, 345, 250); 
+		
+		$('#info-top-left').rePosStageElement(0, 0, 558, 250); 
+		
+		
+		//$('#menu-butt').css({ 'left': 65, 'top': 27 }).width(137).height(68);
+		
+		//$('#cc-off-butt').css({ 'left': $(window).width() - 300, 'top': $(window).height() - 105 }).width(73).height(105);
+		
+		//$('#cc-on-butt').css({ 'left': $(window).width() - 300, 'top': $(window).height() - 105 }).width(73).height(105);
+		
+		volDragXBoundLeft = $(window).width() * wPer(310);
+		
+		//console.log(volDragXBoundLeft);
+		
+		volDragXBoundRight = $(window).width() * wPer(430);
+		
+		proDragXBoundRight = $(window).width() * wPer(1920);
+		
+		setUpVolDrag();
+		
+		setUpProgressDrag();
+	
+	}
+	
+	$('#info-bg').mousedown(function(){$('#info-div').hide();});
+	$('#click-to-close').mousedown(function(){$('#info-div').hide();});
+	$('#info-bottom-right').mousedown(function(){$('#info-div').hide();});
+	$('#info-bottom-left').mousedown(function(){$('#info-div').hide();});
+	$('#info-top-left').mousedown(function(){$('#info-div').hide();});
+	
+	function setUpVolDrag(){
+		try{
+			$('#vol-slide').draggable( "destroy" );
+		}
+		catch(err) {
+			//console.log(err.message);
+		}
+		
+		$('#vol-slide').draggable({ 
+			axis: "x" , 
+			containment: [volDragXBoundLeft, 0, volDragXBoundRight, 0], //[ x1, y1, x2, y2 ]
+			drag: function() {
+			
+			var curVolLen = $('#vol-slide').position().left - volDragXBoundLeft;
+			
+			var volBarLen = volDragXBoundRight - volDragXBoundLeft;
+			
+			var currentVol = (curVolLen/volBarLen) * 100;
+			
+			//console.log(currentVol);
+			
+			if(currentVol < 0){
+				currentVol = 100;
+			}
+			
+			jwplayer("content_video").setVolume(currentVol);
+			
+			
+			volBarWidth = (curVolLen/$(window).width()) * 1920;
+			
+			$('#vol-bar').rePosStageElement(316, 1027, volBarWidth, 5); 
+			
+			volSlidePos = ($('#vol-slide').position().left/$(window).width()) * 1920;
+			
+			
+			},
+			stop: function( event, ui ) {
+	
+			}
+		});
+		
+		//console.log('set up draggable');
+	}
+
+	function setUpProgressDrag(){
+		try{
+			$('#progress-circle').draggable( "destroy" );
+		}
+		catch(err) {
+			//console.log(err.message);
+		}
+		
+		
+		$('#progress-circle').draggable({ 
+			axis: "x" , 
+			containment: [proDragXBoundLeft, 0, proDragXBoundRight, 0], //[ x1, y1, x2, y2 ]
+			drag: function() {
+				clearInterval(posInt);
+				
+				var curProLen = $('#progress-circle').position().left;
+				
+				var proBarWidth = (curProLen/$(window).width()) * 1920;
+				
+				$('#progress-bar').rePosStageElement(0, 967, proBarWidth + 10, 7);
+			},
+			stop: function( event, ui ) {
+				
+				var videoDur = jwplayer("content_video").getDuration();
+				var videoPos = ($('#progress-circle').position().left / $(window).width()) * videoDur;
+				
+				jwplayer("content_video").seek(videoPos);
+				
+				/*
+				if (videoPos < jwplayer("content_video").getPosition()){
+					
+				}
+				*/
+				
+				posInt = setInterval(function(){ posIntFunc(); }, 100); 
+			}
+		});
+		
+	}	
+	
+	$('#clear-out').mousemove(function(){
+
+		if(!menuShow){
+			showMenu();
+		}
+    });
+	
+	$('#menu-out').mousemove(function(){
+		if(!menuShow){
+			hideMenuTime();
+		}
+	}).mouseover(function(){
+		overMenu = false;
+		
+	}).mouseout(function(){
+		overMenu = true;
+
+	});
+	
+	
+	// choice button
+	(function ButtonChoiceInit() {
+		
+		imgButton('#close-butt', function(){
+			window.parent.doExit();
+		});
+		
+		imgButton('#pause-butt', function(){
+			$('#pause-butt').hide();
+			$('#play-butt').show();
+			jwplayer('content_video').pause();
+		});
+		
+		imgButton('#play-butt', function(){
+			$('#pause-butt').show();
+			$('#play-butt').hide();
+			jwplayer('content_video').pause();
+		});
+		
+		imgButton('#back-butt', function(){
+			window.parent.showNext = true;
+			window.parent.lastSlide();
+		});
+		
+		imgButton('#next-butt', function(){
+			window.parent.nextSlide();
+		});
+		
+		imgButton('#info-butt', function(){
+			$('#info-div').show();
+		});
+
+
+		
+		
+		
+		
+		
+	
+
+	}());
+	
+	$('#vol-butt').mouseover(function(){
+		
+		$('#vol-butt').attr('src', 'img/video-skin/vol-butt_hover.png');
+		$('#vol-butt-div').show();
+        
+    }).mouseout(function(){
+	
+		$('#vol-butt').attr('src', 'img/video-skin/vol-butt.png');
+		$('#vol-butt-div').hide();
+
+    });
+	
+	$('#vol-butt-div').mouseover(function(){	
+		$('#vol-butt-div').show();
+		$('#vol-butt').attr('src', 'img/video-skin/vol-butt_hover.png');
+    });
+	
+	
+	function hideMenu(){
+		
+		$('#video-menu').fadeOut('slow');
+		$('#clear-out').css('cursor', 'none');
+		
+		$('#menu-out').hide();
+		
+		menuShow = true;
+
+		var TimedNext = function() {
+			menuShow = false;	
+		}
+		setTimeout(TimedNext, 2000);
+
+
+    }
+	
+	function hideMenuTime(){
+
+		menuShow = true;
+
+		var TimedNext = function() {
+
+			if(!overMenu){
+				$('#video-menu').fadeOut('slow');
+				$('#clear-out').css('cursor', 'none');
+				$('#menu-out').hide();
+				
+			}
+		}
+		setTimeout(TimedNext, 2000);
+		
+		var TimedNext = function() {
+			menuShow = false;	
+		}
+		setTimeout(TimedNext, 4000);
+
+
+    }
+	
+	function showMenu(){
+		
+		$('#video-menu').fadeIn('slow');
+		$('#clear-out').css('cursor', 'pointer');
+		$('#menu-out').show();
+    }
+	
+	function viewHideClosedCaptions()
+	{ 
+		if(jwplayer("content_video").getCurrentCaptions() == 0) // Off
+		{
+			jwplayer("content_video").setCurrentCaptions(1);
+		}else{
+			jwplayer("content_video").setCurrentCaptions(0);		
+		}
+	}
+	
+	
+	
+});
+
+</script>
+</body>
+
+</html>
+
+
+

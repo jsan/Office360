@@ -1,0 +1,206 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <!--<meta http-equiv="X-UA-Compatible" content="IE=11">--> 
+    <meta charset="utf-8" />
+<link rel="stylesheet" href="../css/preloader.css" type="text/css" media="screen, print" />
+    <link rel="stylesheet" href="css/lavacake-cus.css" type="text/css" media="screen, print" />
+
+	<script type="text/javascript" src="../js/jquery-1.11.3.min.js"></script>
+	<script type="text/javascript" src="../js/jquery-ui-1.11.4.js"></script>
+	<script type="text/javascript" src="js/lavacake-cus-jq.js"></script>
+	
+</head>
+<body>
+	<div id="loader-wrapper">
+        <div id="loader"></div>
+    
+        <div class="loader-section section-left"></div>
+        <div class="loader-section section-right"></div>
+    
+    </div>
+
+
+
+<img id="background" src="" />
+
+<img class="submit pos-with-pointer" src="img/clear-spot.png" />
+<img class="button-1 pos-with-pointer" src="img/clear-spot.png" />
+<img class="button-2 pos-with-pointer" src="img/clear-spot.png" />
+
+<img class="tick-1 pos-no-pointer hide" src="img/tick.png" />
+<img class="tick-2 pos-no-pointer hide" src="img/tick.png" />
+
+<img id="white-back" class="pos-no-pointer hide" src="img/white-back.png" />
+    
+<img id="correct" class="pos-no-pointer hide" src="img/correct.png" />
+<img id="incorrect" class="pos-no-pointer hide" src="img/incorrect.png" />
+
+
+
+
+<script>
+
+$(document).ready(function ( ) {
+	
+	$(window).load(function () { // makes sure the whole site is loaded
+			$("#status").fadeOut(); // will first fade out the loading animation
+			$("#preloader").delay(350).fadeOut("slow"); // will fade out the white DIV that covers the website.
+			$('body').addClass('loaded');
+			$('h1').css('color','#222222');
+			$("#loader-wrapper").fadeOut(); 
+	});
+
+	imageObj = new Image();
+	imageObj.src = "img/bg/" + window.parent.CurrentQuestion.bgImage;
+	
+	$('#background').attr('src', imageObj.src);
+	
+	$('.hide').hide();
+	
+	var ButtonsCor = [0,1];
+	var ButtonsClicked = [0,0];
+
+		
+	resize_and_rep_stage();
+	
+	
+	window.parent.$(window).resize(function(){
+		
+		var TimedNext = function() {
+			
+			resize_and_rep_stage();
+			
+		}
+		setTimeout(TimedNext, 100);
+	});
+	
+	function resize_and_rep_stage() {
+		
+		
+		$('#background').rePosStageElement(0, 0, 1920, 1080);
+		
+		$('#white-back').rePosStageElement(0, 0, 1920, 1080);
+
+		$('#correct').rePosStageElement(560, 224, 800, 592);
+		$('#incorrect').rePosStageElement(562, 168, 800, 730);
+		
+		$('.submit').css({'left': $(window).width() * wPer(550), 'top': $(window).height() * hPer(975)}).width($(window).width() * wPer(180)).height($(window).height() * hPer(75));
+		$('.tick-2').css({'left': $(window).width() * wPer(93), 'top': $(window).height() * hPer(599)}).width($(window).width() * wPer(47)).height($(window).height() * hPer(47));
+		$('.tick-1').css({'left': $(window).width() * wPer(93), 'top': $(window).height() * hPer(707)}).width($(window).width() * wPer(47)).height($(window).height() * hPer(47));
+		
+		$('.button-2').css({'left': $(window).width() * wPer(85), 'top': $(window).height() * hPer(585)}).width($(window).width() * wPer(259)).height($(window).height() * hPer(85));
+		$('.button-1').css({'left': $(window).width() * wPer(85), 'top': $(window).height() * hPer(690)}).width($(window).width() * wPer(259)).height($(window).height() * hPer(85));
+		
+
+		$('.back_white').width($(window).width()).height($(window).height());
+		
+		$('.incorrect').width($(window).width() * 0.40).height($(window).height() * 0.70).css({'top': $(window).height() * 0.10, 'left': $(window).width() * 0.30});
+		$('.correct').width($(window).width() * 0.38).height($(window).height() * 0.55).css({'top': $(window).height() * 0.10, 'left': $(window).width() * 0.30});
+	}
+	
+	for (var i = 1 ; i <= 2 ; i++){
+		SetUpButton(i);
+	}
+	
+	function SetUpButton(num){
+		$('.button-' + num).mouseover(function() {	
+
+		}).mouseout(function() {
+		
+		}).mousedown(function() {	
+			$('.tick-1').hide();
+			$('.tick-2').hide();	
+			ButtonsClicked = [0,0];
+			
+			if(ButtonsClicked[num - 1] == 0){
+				$('.tick-' + num).show();	
+				ButtonsClicked[num - 1] = 1;
+			}else{
+				$('.tick-' + num).hide();	
+				ButtonsClicked[num - 1] = 0;
+			}
+		});
+		
+		$('.tick-' + num).mouseover(function() {	
+
+		}).mouseout(function() {
+		
+		}).mousedown(function() {	
+			$('.tick-1').hide();
+			$('.tick-2').hide();	
+			ButtonsClicked = [0,0];
+				
+			if(ButtonsClicked[num - 1] == 0){
+				$('.tick-' + num).show();	
+				ButtonsClicked[num - 1] = 1;
+			}else{
+				$('.tick-' + num).hide();	
+				ButtonsClicked[num - 1] = 0;
+			}
+		});
+	}
+	
+	$('.submit').mousedown(function() {	
+		
+// 		window.parent.CurrentQuestion.QuestionCompleted = true;
+        if (!ButtonsClicked.equals([0,0]))
+		    moveToNextSlide();
+	
+/*		if (ButtonsClicked.equals(ButtonsCor)){
+			window.parent.CurrentQuestion.QuestionCompleted = true;
+			ShowCorrect();
+		}else{
+			ShowIncorrect();
+			$('.submit').effect( "shake" );
+		}
+*/		
+	});
+	
+
+
+	
+	function wPer(rawValue){
+		var scoreHeight = 1929;
+		var widthPercent = rawValue/scoreHeight;
+		return widthPercent;
+	}
+	
+	function hPer(rawValue){
+		var scoreHeight = 1085;
+		var heightPercent = rawValue/scoreHeight;
+		return heightPercent;
+	}
+	
+
+	Array.prototype.equals = function (array) {
+		// if the other array is a falsy value, return
+		if (!array)
+			return false;
+	
+		// compare lengths - can save a lot of time 
+		if (this.length != array.length)
+			return false;
+	
+		for (var i = 0, l=this.length; i < l; i++) {
+			// Check if we have nested arrays
+			if (this[i] instanceof Array && array[i] instanceof Array) {
+				// recurse into the nested arrays
+				if (!this[i].equals(array[i]))
+					return false;       
+			}           
+			else if (this[i] != array[i]) { 
+				// Warning - two different object instances will never be equal: {x:20} != {x:20}
+				return false;   
+			}           
+		}       
+		return true;
+	}  
+ 
+
+});
+</script>
+
+</body>
+
+</html>

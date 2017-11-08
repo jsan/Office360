@@ -1,0 +1,212 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <!--<meta http-equiv="X-UA-Compatible" content="IE=11">--> 
+    <meta charset="utf-8" />
+<link rel="stylesheet" href="../css/preloader.css" type="text/css" media="screen, print" />
+    <link rel="stylesheet" href="css/lavacake-cus.css" type="text/css" media="screen, print" />
+
+	<script type="text/javascript" src="../js/jquery-1.11.3.min.js"></script>
+	<script type="text/javascript" src="../js/jquery-ui-1.11.4.js"></script>
+	<script type="text/javascript" src="js/lavacake-cus-jq.js"></script>
+	
+    <style>
+		#sortable { list-style-type: none; margin: 0; padding: 0; width: 60%; z-index:50; }
+		#sortable li { margin: 0 3px 3px 3px; padding: 18px; padding-left: 1.5em; font-size: 1.4em; height: 18px; cursor:pointer;}
+		#sortable li span { position: absolute; margin-left: -1.3em; cursor:pointer;}
+	</style>
+</head>
+<body>
+	<div id="loader-wrapper">
+        <div id="loader"></div>
+    
+        <div class="loader-section section-left"></div>
+        <div class="loader-section section-right"></div>
+    
+    </div>
+
+
+    <img id="background" alt="Background" class="pos-no-pointer" />
+    
+	<!--Including all the images for the project.-->
+    <img id="drop-1" alt="Drag" class="pos-no-pointer hide" src="img/drag-and-drop/drop-1.png" />
+    <img id="drop-2" alt="Drag" class="pos-no-pointer hide" src="img/drag-and-drop/drop-2.png" />
+    <img id="drop-3" alt="Drag" class="pos-no-pointer hide" src="img/drag-and-drop/drop-3.png" />
+    <img id="drop-4" alt="Drag" class="pos-no-pointer hide" src="img/drag-and-drop/drop-4.png" />
+    <img id="drop-5" alt="Drag" class="pos-no-pointer hide" src="img/drag-and-drop/drop-5.png" />
+       
+    <img id="drag-1" alt="Drag" class="pos-with-pointer" src="img/drag-and-drop/drag-1.png" />
+    <img id="drag-2" alt="Drag" class="pos-with-pointer" src="img/drag-and-drop/drag-2.png" />
+    <img id="drag-3" alt="Drag" class="pos-with-pointer" src="img/drag-and-drop/drag-3.png" />
+    <img id="drag-4" alt="Drag" class="pos-with-pointer" src="img/drag-and-drop/drag-4.png" />
+    <img id="drag-5" alt="Drag" class="pos-with-pointer" src="img/drag-and-drop/drag-5.png" />
+
+	
+    <img id="next" class="pos-with-pointer hide" src="img/drag-and-drop/closeandadd.png" />
+    
+<script>
+
+//location.reload();
+
+        $(document).ready(function () {
+			
+			
+			
+            $(window).load(function () { // makes sure the whole site is loaded
+                $("#status").fadeOut(); // will first fade out the loading animation
+				$("#preloader").delay(350).fadeOut("slow"); // will fade out the white DIV that covers the website.
+				$('body').addClass('loaded');
+				$('h1').css('color','#222222');
+				$("#loader-wrapper").fadeOut(); 
+            });
+
+			imageObj = new Image();
+			imageObj.src="img/bg/" + window.parent.CurrentQuestion.bgImage;
+			
+			var amountDropped = 0;
+
+            $('#background').attr('src', imageObj.src);
+			
+			$('.hide').hide();
+
+            resizeAndReposStage();
+
+            window.parent.$(window).resize(function () {
+
+                var TimedNext = function () {
+
+
+                    resizeAndReposStage();
+
+
+                };
+                setTimeout(TimedNext, 100);
+            });
+
+            function resizeAndReposStage() {
+
+                $('#background').rePosStageElement(0, 0, 1920, 1080);
+
+				$('#drag-1').rePosStageElement(1103, 666, 644, 144);
+				$('#drag-2').rePosStageElement(1103, 810, 644, 144);
+				$('#drag-3').rePosStageElement(1103, 378, 644, 144);
+				$('#drag-4').rePosStageElement(1103, 522, 644, 144);
+				$('#drag-5').rePosStageElement(1103, 234, 644, 144);
+
+				$('#drop-1').rePosStageElement(361, 321, 436, 61);
+				$('#drop-2').rePosStageElement(360, 399, 436, 61);
+				$('#drop-3').rePosStageElement(360, 479, 436, 61);
+				$('#drop-4').rePosStageElement(360, 553, 436, 61);
+				$('#drop-5').rePosStageElement(360, 634, 436, 61);
+				
+				$('#next').rePosStageElement(1122, 850, 698, 118);
+
+            }
+
+			(function ButtonChoiceInit() {
+				
+				imgButton('#next', function(){
+					window.parent.nextSlide();
+				});
+
+			}());
+	
+			for (var i = 1 ; i <= 10 ; i++){
+				SetUpDND(i);
+			}
+			
+			var tempTop = 0;
+			var tempLeft = 0;
+			
+			/*
+			This function is constructed using the screen percentage.
+			*/			
+			function SetUpDND(num){
+				
+				$('#drag-' + num).draggable({ 
+						
+					start: function( event, ui ) {
+
+					},
+					
+					stop: function( event, ui ) {
+
+						var xPos = $('#drag-' + num).position().left;
+						var yPos = $('#drag-' + num).position().top;
+						
+						//console.log(xPos);
+						
+						xPos = (xPos / $(window).width()) + wPer(322);
+						yPos = (yPos / $(window).height()) + hPer(72);
+						
+						
+						
+						var dropLeft = 310;
+						var dropTop = 0;
+						var dropRight = 0;
+						var dropBottom = 0;
+
+						switch (num) {
+							case 1:
+								dropTop = 200;
+								break;
+							case 2:
+								dropTop = 300;
+								break;
+							case 3:
+								dropTop = 400;
+								break;
+							case 4:
+								dropTop = 500;
+								break;
+							case 5:
+								dropTop = 600;
+								break;
+
+						}
+						
+						dropLeft = wPer(dropLeft);
+						dropTop = hPer(dropTop);
+						
+						dropRight = dropLeft + wPer(550);
+						dropBottom = dropTop + hPer(200);
+			
+						//console.log(xPos + ' ' + dropLeft + ' ' + dropRight + ' ' + yPos + ' ' + dropTop + ' ' + dropBottom);
+						
+						if((xPos > dropLeft && xPos < dropRight ) && (yPos > dropTop && yPos < dropBottom)){
+
+							$('#drag-' + num).hide();
+							$('#drop-' + num).show();
+							
+							++amountDropped;
+							
+							if(amountDropped == 5){
+								
+								$('#next').show();
+								
+								//window.parent.parent.tasksCompleted[3] = 1;
+								//window.parent.document.getElementById('main-ui').contentWindow.updateTasksCompleted();
+
+								
+							}
+							
+							
+
+						}else{
+							resizeAndReposStage();
+							
+						}
+					}
+				});
+			
+			}
+	
+			
+
+        });
+
+
+
+    </script>
+</body>
+</html>

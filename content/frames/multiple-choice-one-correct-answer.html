@@ -1,0 +1,181 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <!--<meta http-equiv="X-UA-Compatible" content="IE=11">--> 
+    <meta charset="utf-8" />
+<link rel="stylesheet" href="../css/preloader.css" type="text/css" media="screen, print" />
+    <link rel="stylesheet" href="css/lavacake-cus.css" type="text/css" media="screen, print" />
+
+	<script type="text/javascript" src="../js/jquery-1.11.3.min.js"></script>
+    <script type="text/javascript" src="js/lavacake-cus-jq.js"></script>
+
+</head>
+<body>
+    <div id="loader-wrapper">
+        <div id="loader"></div>
+    
+        <div class="loader-section section-left"></div>
+        <div class="loader-section section-right"></div>
+    
+    </div>
+
+    <img id="background" alt="Background" class="pos-no-pointer" />
+	
+    <img id="tick-1" alt="Tick" class="pos-with-pointer hide" src="img/multiple-choice-one/tickQ2.png" />
+    <img id="tick-2" alt="Tick" class="pos-with-pointer hide" src="img/multiple-choice-one/tickQ2.png" />
+    <img id="tick-3" alt="Tick" class="pos-with-pointer hide" src="img/multiple-choice-one/tickQ2.png" />
+    <img id="tick-4" alt="Tick" class="pos-with-pointer hide" src="img/multiple-choice-one/tickQ2.png" />
+    <img id="tick-5" alt="Tick" class="pos-with-pointer hide" src="img/multiple-choice-one/tickQ2.png" />
+    
+    <img id="option-1" alt="Option 1" class="pos-with-pointer" src="img/clear-spot.png" />
+    <img id="option-2" alt="Option 2" class="pos-with-pointer" src="img/clear-spot.png" />
+    <img id="option-3" alt="Option 3" class="pos-with-pointer" src="img/clear-spot.png" />
+    <img id="option-4" alt="Option 4" class="pos-with-pointer" src="img/clear-spot.png" />
+    <img id="option-5" alt="Option 5" class="pos-with-pointer" src="img/clear-spot.png" />
+
+    <img id="submit" alt="Submit" class="pos-with-pointer" src="img/clear-spot.png" />
+    
+    <img id="correct" alt="Correct" class="pos-no-pointer hide" src="img/multiple-choice-one/correct.png" />
+    <img id="incorrect" alt="Incorrect" class="pos-no-pointer hide" src="img/multiple-choice-one/incorrect.png" />
+    
+    <img id="ok" alt="Okay Button" class="pos-with-pointer hide" src="img/multiple-choice-one/ok-button.png" />
+   
+
+    <script>
+
+    
+
+        $(document).ready(function () {
+				
+			$(window).load(function () { // makes sure the whole site is loaded
+				$("#status").fadeOut(); // will first fade out the loading animation
+				$("#preloader").delay(350).fadeOut("slow"); // will fade out the white DIV that covers the website.
+				$('body').addClass('loaded');
+				$('h1').css('color','#222222');
+				$("#loader-wrapper").fadeOut(); 
+			});
+
+            imageObj = new Image();
+			imageObj.src = "img/bg/" + window.parent.CurrentQuestion.bgImage;
+			
+			$('#background').attr('src', imageObj.src);
+			
+			$('.hide').hide();
+			
+			var assCor = false;
+
+            resizeAndReposStage();
+
+            window.parent.$(window).resize(function () {
+
+                var TimedNext = function () {
+
+                    resizeAndReposStage();
+
+                };
+
+                setTimeout(TimedNext, 100);
+
+            });
+
+
+            // choice button
+            (function ButtonChoiceInit() {
+
+                // button click event			
+				imgButton('#submit', function(){
+					 /*window.parent.$('#image-holder').fadeOut();
+					window.parent.$('#poster-frame').fadeOut();
+					window.parent.$('#close-poster').fadeOut();
+					*/
+					if(assCor){
+						
+						$('#correct').show();
+						$('#ok').show();
+					}else{
+						$('#incorrect').show();
+						$('#ok').show();
+					}
+				});
+				
+				imgButton('#ok', function(){
+					$('#correct').hide();
+					$('#incorrect').hide();
+					$('#ok').hide();
+					
+					if(assCor){
+						window.parent.nextSlide();
+					}
+				});
+				
+            }());
+
+			$('#option-1').mousedown(function (){
+				hideTicks();
+				$('#tick-1').show();
+			});
+			
+			$('#option-2').mousedown(function (){
+				hideTicks();
+				$('#tick-2').show();
+			});
+			
+			$('#option-3').mousedown(function (){
+				hideTicks();
+				$('#tick-3').show();
+			});
+			
+			$('#option-4').mousedown(function (){
+				hideTicks();
+				$('#tick-4').show();
+			});
+			
+			$('#option-5').mousedown(function (){
+				hideTicks();
+				assCor = true;
+				$('#tick-5').show();
+			});
+			
+			function hideTicks() {
+				assCor = false;
+				$('#tick-1').hide();
+				$('#tick-2').hide();
+				$('#tick-3').hide();
+				$('#tick-4').hide();
+				$('#tick-5').hide();
+			}
+
+            function resizeAndReposStage() {
+
+                $('#background').rePosStageElement(0, 0, 1920, 1080);
+				$('#noise-loader').rePosStageElement(851, 431, 218, 218);
+				
+				$('#correct').rePosStageElement(0, 0, 1920, 1080);
+				$('#incorrect').rePosStageElement(0, 0, 1920, 1080);
+				
+				$('#ok').rePosStageElement(860, 707, 202, 122);
+				
+				$('#tick-1').rePosStageElement(1075, 390, 75, 75);
+				$('#tick-2').rePosStageElement(1580, 390, 75, 75);
+				$('#tick-3').rePosStageElement(945,  695, 75, 75);
+				$('#tick-4').rePosStageElement(1330, 695, 75, 75);
+				$('#tick-5').rePosStageElement(1672, 695, 75, 75);
+				
+				$('#option-1').rePosStageElement(950, 240, 320, 285);
+				$('#option-2').rePosStageElement(1460, 255, 300, 280);
+				$('#option-3').rePosStageElement(840,  572, 300, 280);
+				$('#option-4').rePosStageElement(1220, 572, 300, 280);
+				$('#option-5').rePosStageElement(1565, 572, 300, 280);
+				
+				$('#submit').rePosStageElement(77, 905, 212, 82);
+
+            }
+
+
+        });
+
+
+
+    </script>
+</body>
+</html>

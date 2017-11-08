@@ -1,0 +1,158 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <!--<meta http-equiv="X-UA-Compatible" content="IE=11">--> 
+    <meta charset="utf-8" />
+	<link rel="stylesheet" href="../css/preloader.css" type="text/css" media="screen, print" />
+    <link rel="stylesheet" href="css/lavacake-cus.css" type="text/css" media="screen, print" />
+
+	<script type="text/javascript" src="../js/jquery-1.11.3.min.js"></script>
+	<script type="text/javascript" src="../js/jquery-ui-1.11.4.js"></script>
+    
+    <script type="text/javascript" src="js/lavacake-cus-jq.js"></script>
+    
+    <style>
+		#sortable { list-style-type: none; margin: 0; padding: 0; width: 1000; }
+		/*#sortable li { margin: 0 3px 3px 3px; padding: 18px; padding-left: 1.5em; font-size: 1.4em; height: 18px; cursor:pointer;}*/
+		#sortable li { padding: 1px; float: left; cursor:pointer; }
+  
+	</style>
+
+</head>
+<body>
+	<div id="loader-wrapper">
+        <div id="loader"></div>
+    
+        <div class="loader-section section-left"></div>
+        <div class="loader-section section-right"></div>
+    
+    </div>
+
+    <img id="background" alt="Background" class="pos-no-pointer" />
+    
+	//Including all the images for the project.
+
+    <ul id="sortable" class="pos-no-pointer">
+    	<li id="4" ><img id="order-4" alt="Drag" src="img/drag-and-drop-re-order/order-4.png" /></li>
+        <li id="3" ><img id="order-3" alt="Drag" src="img/drag-and-drop-re-order/order-3.png" /></li>
+        <li id="1" ><img id="order-1" alt="Drag" src="img/drag-and-drop-re-order/order-1.png" /></li>
+        <li id="2" ><img id="order-2" alt="Drag" src="img/drag-and-drop-re-order/order-2.png" /></li>
+        
+    </ul>
+
+	<img id="submit" alt="Submit" class="pos-with-pointer" src="img/drag-and-drop-re-order/submit.png" />
+    
+    <img id="white-back" class="pos-no-pointer hide" src="img/white-back.png" />
+
+    <img id="correct" class="pos-no-pointer hide" src="img/correct.png" />
+    <img id="incorrect" class="pos-no-pointer hide" src="img/incorrect.png" />
+    
+<script>
+
+		
+
+        $(document).ready(function () {
+			
+            $(window).load(function () { // makes sure the whole site is loaded
+                $("#status").fadeOut(); // will first fade out the loading animation
+				$("#preloader").delay(350).fadeOut("slow"); // will fade out the white DIV that covers the website.
+				$('body').addClass('loaded');
+				$('h1').css('color','#222222');
+				$("#loader-wrapper").fadeOut(); 
+            });
+
+			imageObj = new Image();
+			imageObj.src="img/bg/" + window.parent.CurrentQuestion.bgImage;
+			$('#background').attr('src', imageObj.src);
+			
+			var order = ["1","2","3","4"];
+
+            
+			
+			$('.hide').hide();
+
+            resizeAndReposStage();
+
+            window.parent.$(window).resize(function () {
+
+                var TimedNext = function () {
+
+
+                    resizeAndReposStage();
+
+
+                };
+                setTimeout(TimedNext, 100);
+            });
+
+            function resizeAndReposStage() {
+
+                $('#background').rePosStageElement(0, 0, 1920, 1080);
+				$('#responseVideo').rePosStageElement(0, 0, 1920, 1080);
+				
+				$('#background').rePosStageElement(0, 0, 1920, 1080);
+				$('#white-back').rePosStageElement(0, 0, 1920, 1080);
+		
+				$('#correct').rePosStageElement(560, 224, 800, 592);
+				$('#incorrect').rePosStageElement(562, 168, 800, 730);
+				
+				$('#sortable li').css({'margin': ($(window).height() * wPer(15)) + 'px ' + ($(window).width() * wPer(15)) + 'px ' + ($(window).height() * hPer(15)) + 'px 0'});
+				
+				$('#sortable').css({ 'left': $(window).width() * wPer(98), 'top': $(window).height() * hPer(290) });
+
+				$('#order-1').rePosStageElement(0, 0, 403, 456);
+				$('#order-2').rePosStageElement(0, 0, 403, 456);
+				$('#order-3').rePosStageElement(0, 0, 403, 456);
+				$('#order-4').rePosStageElement(0, 0, 403, 456);
+				
+				$('#submit').rePosStageElement(789, 931, 221, 106);
+
+            }
+			
+			$('#submit').mouseover(function(){
+				$('#submit').fadeTo("fast", 0.8);
+			}).mouseout(function(){
+				$('#submit').fadeTo("fast", 1);
+			}).mousedown(function(){
+				
+				var idsInOrder = $("#sortable").sortable('toArray');
+
+				if (idsInOrder.equals(order)){
+					
+					ShowCorrect();
+					
+				}
+				else{
+					ShowIncorrect();
+				}
+				
+			});
+			
+			function showResponseVideo(src) {
+		
+				$('#responseVideo').attr('src', src);
+				$('#responseVideo').attr('z-index', '100');
+				$('#responseVideo').show();
+		
+			}
+
+			$(function() {
+				$( "#sortable" ).sortable({
+					stop: function( event, ui ) {
+						
+						
+						
+					}
+				});
+				$( "#sortable" ).disableSelection();
+			});
+	
+			
+
+        });
+
+
+
+    </script>
+</body>
+</html>
