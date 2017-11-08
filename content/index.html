@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+
+<script src="js/jquery-1.11.3.min.js"></script>
+<script type="text/javascript" src="js/design.js"></script>	
+<script type="text/javascript" src="js/bigscreen.min.js"></script>	
+<script type="text/javascript" src="config/course-details.js"></script>	
+
+<script type="text/javascript" src="js/scormactions.js"></script>	
+<script type="text/javascript" src="js/scormfunctions-2004-3rd.js"></script>	
+<script type="text/javascript" src="js/questions.js"></script>	
+
+<link type="text/css" rel="stylesheet" href="css/main.css" />
+<link type="text/css" rel="stylesheet" href="css/preloader.css" />
+
+<title></title>
+
+</head>
+
+<body>
+
+<div id="loader-wrapper">
+    <div id="loader"></div>
+
+    <div class="loader-section section-left"></div>
+    <div class="loader-section section-right"></div>
+
+</div>
+
+<div class="content">
+	
+    <iframe  class="content-body" marginheight="0" marginwidth="0" seamless id="content" name="content" frameborder="0" scrolling="no" width="100%" height="100%"></iframe>
+
+</div>
+
+<script type="text/javascript">
+
+//window.parent.document.getElementsByTagName("frame")[0].setAttribute("allowfullscreen", "");
+
+$(window).load(function() { // makes sure the whole site is loaded
+	$("#status").fadeOut(); // will first fade out the loading animation
+	$("#preloader").delay(350).fadeOut("slow"); // will fade out the white DIV that covers the website.
+	$('body').addClass('loaded');
+	$('h1').css('color','#222222');
+});
+
+$(window).load(function() {
+
+	doStart();
+
+	
+});
+
+
+
+</script>
+
+</body>
+
+
+</html>
