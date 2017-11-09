@@ -2,7 +2,10 @@
 
 Cliente CBP Adelaide Australia.
 
-Projeto contsruido a partir de uma imagem fornecida pelo cliente, mapa em 360 graus de um office.
+Projeto contsruido a partir de imagens e fluxo fornecidos pelo cliente.
 
-Construido em javaScript css e html.
-Mapeamento 3d, navegação, links, design...
+Mapa em 360 graus, flow, links, slides engine, design.
+
+all build in javaScript css e html.
+
+link: www.
