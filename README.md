@@ -13,3 +13,5 @@ link: www.
 Adalberto, este é akele projeto javascript em 360 graus.
 se quiser ver baixa o zip ('botao verde') e excuta o index.html.
 Valeu.
+
+
